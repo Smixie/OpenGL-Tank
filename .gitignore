@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/fragment_trawa.glsl
+/vertex_trawa.glsl
+/tekstury/fur.png
+/tekstury/tiger.png

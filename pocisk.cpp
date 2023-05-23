@@ -16,7 +16,7 @@ Pocisk::Pocisk(vec3 shootpos, float obr) {
         exit(1);
     }
     else fprintf(stderr, "Pocisk - wczytano\n");
-    position = shootpos + vec3(0.0f, 0.0f, -0.2f); // Set the initial position of the bullet 
+    position = shootpos + vec3(0.0f, -1.0f, -0.2f); // Set the initial position of the bullet 
 	//printf("%f %f %f", position[0], position[1], position[2]);
     scale = vec3(0.2f, 0.2f, 0.2f); // Set the initial scale of the bullet
 	obrot = obr;
@@ -41,7 +41,6 @@ void Pocisk::drawPocisk(GLuint& tex, ShaderProgram* sp){
 	M = glm::scale(M, scale);
 
 	M = rotate(M, this->obrot, vec3(0.0f, 1.0f, 0.0f));
-
 
 	Model::drawSolid(tex, sp, verts, normals, texCoords, vertexCount, M);
 }
