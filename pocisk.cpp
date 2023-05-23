@@ -5,6 +5,7 @@
 #include "loadOBJ.h"
 #include "shaderprogram.h"
 
+
 #define model "modele/bullet.obj"
 
 using namespace glm;
@@ -16,12 +17,12 @@ Pocisk::Pocisk(vec3 shootpos, float obr) {
         exit(1);
     }
     else fprintf(stderr, "Pocisk - wczytano\n");
-    position = shootpos + vec3(0.0f, 0.0f, -0.2f); // Set the initial position of the bullet 
+	position = shootpos + vec3(0.0f, -1.0f, -0.2f);// +vec3(sin(this->obrot), -cos(this->obrot), 0.0f); // Set the initial position of the bullet 
 	//printf("%f %f %f", position[0], position[1], position[2]);
     scale = vec3(0.2f, 0.2f, 0.2f); // Set the initial scale of the bullet
 	obrot = obr;
 	life = 150;
-	speed = 0.1f;
+	speed = 0.2f;
 }
 
 Pocisk::~Pocisk() {
@@ -42,13 +43,16 @@ void Pocisk::drawPocisk(GLuint& tex, ShaderProgram* sp){
 
 	M = rotate(M, this->obrot, vec3(0.0f, 1.0f, 0.0f));
 
-
 	Model::drawSolid(tex, sp, verts, normals, texCoords, vertexCount, M);
 }
 
-void Pocisk::Update(vec3 posLufa) {
-	//printf(" %f %f %f ", posLufa[0], posLufa[1], posLufa[2]);
-	this->position += 0.2f * vec3( sin(this->obrot),-cos(this->obrot), 0.0f);
-	//printf("%f %f %f %f\n", this->obrot, -cos(radiany), -cos(this->obrot), -sin(this->obrot));
-	this->life -= 1;
+void Pocisk::Update(float depression) {
+	this->position += (speed * vec3( sin(this->obrot),-cos(this->obrot), sin(depression)));
+	if (-position[2] < 0) {
+		this->life = -1;
+	}
+	else
+	{
+		this->life -= 1;
+	}
 }

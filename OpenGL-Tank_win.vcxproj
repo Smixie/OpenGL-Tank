@@ -57,8 +57,10 @@
   <ItemGroup>
     <None Include="fragment.glsl" />
     <None Include="fragment_niebo.glsl" />
+    <None Include="fragment_trawa.glsl" />
     <None Include="vertex.glsl" />
     <None Include="vertex_niebo.glsl" />
+    <None Include="vertex_trawa.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

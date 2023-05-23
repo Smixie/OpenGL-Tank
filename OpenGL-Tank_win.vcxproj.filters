@@ -127,5 +127,11 @@
     <None Include="vertex_niebo.glsl">
       <Filter>Pliki zasobów</Filter>
     </None>
+    <None Include="fragment_trawa.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
+    <None Include="vertex_trawa.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
   </ItemGroup>
 </Project>

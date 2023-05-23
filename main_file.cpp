@@ -41,6 +41,7 @@ Ziemia* ziemia;
 Niebo* niebo;
 Gasiennica* gasiennicaL;
 Gasiennica* gasiennicaP;
+
 KoloS* koloSLp;
 KoloS* koloSLt;
 KoloS* koloSPp;
@@ -68,16 +69,11 @@ std::vector<KoloS*> kolaMaleL;
 std::vector<KoloS*> kolaMaleP;
 
 float aspectRatio = 1;
-float speed_x = 0;
-float speed_y = 0;
+float speed_x = 0,speed_y = 0;
 float predkoscJazdy = 0;
-float obrotWiezy = 0;
-float podniesienie = 0;
+float obrotWiezy = 0, podniesienie = 0;
 float skret = 0;
-
-float theta = 0;
-float phi = 0;
-float radius = 0;
+float fov = 45.0f, theta = 0, phi = 0, radius = 0;
 
 ShaderProgram* sp;
 ShaderProgram* sp_niebo;
@@ -108,7 +104,6 @@ bool r_pressed = false;
 bool f_pressed = false;
 // Strzał
 bool space_pressed = false;
-bool is_fired = false;
 
 //Procedura obsługi błędów
 void error_callback(int error, const char* description) {
@@ -146,6 +141,14 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 		if (key == GLFW_KEY_F) f_pressed = false;
 		if (key == GLFW_KEY_SPACE) space_pressed = false;
 	}
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+	fov -= (float)yoffset;
+	if (fov < 1.0f)
+		fov = 1.0f;
+	if (fov > 90.0f)
+		fov = 90.0f;
 }
 
 void windowResizeCallback(GLFWwindow* window, int width, int height) {
@@ -256,8 +259,12 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_NORMALIZE);
+	glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 	glfwSetWindowSizeCallback(window, windowResizeCallback);
-	glfwSetKeyCallback(window, keyCallback);
+	glfwSetKeyCallback(window, keyCallback);	
+	glfwSetScrollCallback(window, scrollCallback);
+	
+	wczytajModele();
 
 	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 	sp_niebo = new ShaderProgram("vertex_niebo.glsl", NULL, "fragment_niebo.glsl");
@@ -300,7 +307,7 @@ void drawScene(GLFWwindow* window, float angle, float wheelL, float wheelP, floa
 		glm::vec3(kadlub->position[0], -kadlub->position[2], -kadlub->position[1]),
 		glm::vec3(0.0f, 1.0f, 0.0f));
 
-	glm::mat4 P = glm::perspective(50.0f * PI / 180.0f, aspectRatio, 0.01f, 50.0f); //Wylicz macierz rzutowania
+	glm::mat4 P = glm::perspective(glm::radians(fov), aspectRatio, 0.01f, 50.0f); //Wylicz macierz rzutowania 
 
 	sp->use();//Aktywacja programu cieniującego
 	//Przeslij parametry programu cieniującego do karty graficznej
@@ -362,42 +369,28 @@ void drawScene(GLFWwindow* window, float angle, float wheelL, float wheelP, floa
 	niebo->angleX = ruchNieba;
 	niebo->drawNiebo(texNiebo, sp_niebo);
 
-	
-	if (space_pressed) {
-		pocisk = new Pocisk(lufa->position, (kadlub->angleZ * PI / 180) + 2*PI + obrotWieza);
-		printf("%f\n", (kadlub->angleZ * PI / 180) + 2 * PI + obrotWieza);
-		aktywnePociski.push_back(pocisk);
-		space_pressed = false;
-	}
-	
-	// Renderuj pocisk po raz pierwszy
-	if (is_fired)
+	// Renderuj istniejące pociski
+	if (aktywnePociski.size() > 0)
 	{
-		pocisk->drawPocisk(texPocisk, sp);
-		is_fired = false;
-	}
-
-	// Renderuj pocisk tak długo jak żyje
-	for (auto& pocisk : aktywnePociski)
-	{
-		pocisk->Update(lufa->position);
-		//printf("%f ", currentTime);
-		if (pocisk->life < 0)
+		for (auto& pocisk : aktywnePociski)
 		{
-			aktywnePociski.erase(aktywnePociski.begin());
-		}
-		else
-		{
-			pocisk->drawPocisk(texPocisk, sp);
+			pocisk->Update(depression);
+			if (pocisk->life < 0) aktywnePociski.erase(aktywnePociski.begin());
+			else pocisk->drawPocisk(texPocisk, sp);
 		}
 	}
-	
 	
 	glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
 }
 
 void obsluzKlikniecie(float angle) {
-	
+	// strzelanie
+	if (space_pressed) {
+		pocisk = new Pocisk(lufa->position, (kadlub->angleZ * PI / 180) + 2 * PI + lufa->obrot);
+		aktywnePociski.push_back(pocisk);
+		space_pressed = false;
+	}
+
 	//oblicz predkosc jazdy
 	if (w_pressed) {
 		if (predkoscJazdy < 2 * PI) predkoscJazdy += (2 * PI * 1 / 120); // Ograniczenie predkosci
@@ -427,6 +420,7 @@ void obsluzKlikniecie(float angle) {
 		else podniesienie = 0;
 	}
 	else podniesienie = 0;
+	
 
 	//obrot czolgu
 	if (tank_left) {
@@ -483,9 +477,10 @@ void obsluzKlikniecie(float angle) {
 
 }
 
+
 int main(void)
 {
-	wczytajModele();
+	
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
 
 	glfwSetErrorCallback(error_callback);//Zarejestruj procedurę obsługi błędów
