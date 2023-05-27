@@ -19,14 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="allmodels.h" />
-    <ClInclude Include="alltextures.h" />
+    <ClInclude Include="modele.h" />
+    <ClInclude Include="tekstury.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="constants.h" />
-    <ClInclude Include="gasiennica.h" />
+    <ClInclude Include="gasienica.h" />
     <ClInclude Include="kadlub.h" />
-    <ClInclude Include="koloL.h" />
-    <ClInclude Include="koloS.h" />
+    <ClInclude Include="koloDuze.h" />
+    <ClInclude Include="koloMale.h" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="lufa.h" />
     <ClInclude Include="model.h" />
@@ -39,10 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="gasiennica.cpp" />
+    <ClCompile Include="gasienica.cpp" />
     <ClCompile Include="kadlub.cpp" />
-    <ClCompile Include="koloL.cpp" />
-    <ClCompile Include="koloS.cpp" />
+    <ClCompile Include="koloDuze.cpp" />
+    <ClCompile Include="koloMale.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="lufa.cpp" />
     <ClCompile Include="main_file.cpp" />

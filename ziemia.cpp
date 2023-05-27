@@ -15,7 +15,7 @@ Ziemia::Ziemia() {
         fprintf(stderr,"Blad - nie wczytano modelu - ziemia");
         exit(1);
     } else fprintf(stderr,"Ziemia - wczytano\n");
-    position = vec3(0.0f,0.0f,-1.75f);
+    pozycja = vec3(0.0f,0.0f,-1.75f);
 }
 
 Ziemia::~Ziemia() {
@@ -32,7 +32,7 @@ void Ziemia::drawZiemia(GLuint &tex, ShaderProgram *sp) {
 
     mat4 M=glm::mat4(1.0f);
 	M=rotate(M,-90 * PI / 180,glm::vec3(1.0f,0.0f,0.0f));
-	M=translate(M,position);
+	M=translate(M,pozycja);
 
     Model::drawSolid(tex, sp, verts, normals, texCoords, vertexCount, M);
 }

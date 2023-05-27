@@ -28,8 +28,8 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "constants.h"
 #include "lodepng.h"
 #include "shaderprogram.h"
-#include "allmodels.h"
-#include "alltextures.h"
+#include "modele.h"
+#include "tekstury.h"
 #include "camera.h"
 #include <iostream>
 
@@ -39,43 +39,43 @@ Wieza* wieza;
 Lufa* lufa;
 Ziemia* ziemia;
 Niebo* niebo;
-Gasiennica* gasiennicaL;
-Gasiennica* gasiennicaP;
+Gasienica* gasienicaLewa;
+Gasienica* gasienicaPrawa;
 
-KoloS* koloSLp;
-KoloS* koloSLt;
-KoloS* koloSPp;
-KoloS* koloSPt;
+KoloMale* koloMLP;
+KoloMale* koloMLT;
+KoloMale* koloMalePrawePrzod;
+KoloMale* koloMalePraweTyl;
 
-KoloL* koloLL1;
-KoloL* koloLL2;
-KoloL* koloLL3;
-KoloL* koloLL4;
-KoloL* koloLL5;
+KoloDuze* koloDuzeL1;
+KoloDuze* koloDuzeL2;
+KoloDuze* koloDuzeL3;
+KoloDuze* koloDuzeL4;
+KoloDuze* koloDuzeL5;
 
-KoloL* koloP1;
-KoloL* koloP2;
-KoloL* koloP3;
-KoloL* koloP4;
-KoloL* koloP5;
+KoloDuze* koloDuzeP1;
+KoloDuze* koloDuzeP2;
+KoloDuze* koloDuzeP3;
+KoloDuze* koloDuzeP4;
+KoloDuze* koloDuzeP5;
 
 Pocisk* pocisk;
 
 std::vector<Model*> modele;
 std::vector<Pocisk*> aktywnePociski;
-std::vector<KoloL*> kolaLewe;
-std::vector<KoloL*> kolaPrawe;
-std::vector<KoloS*> kolaMaleL;
-std::vector<KoloS*> kolaMaleP;
+std::vector<KoloDuze*> kolaLewe;
+std::vector<KoloDuze*> kolaPrawe;
+std::vector<KoloMale*> kolaMaleL;
+std::vector<KoloMale*> kolaMaleP;
 
 float aspectRatio = 1;
 float speed_x = 0,speed_y = 0;
 float predkoscJazdy = 0;
-float obrotWiezy = 0, podniesienie = 0;
+float obrotWiezy = 0, podniesienieLufy = 0;
 float skret = 0;
-float fov = 45.0f, theta = 0, phi = 0, radius = 0;
+float fov = 60.0f, theta = 0, phi = 0, radius = 0;
 
-ShaderProgram* sp;
+ShaderProgram* sp_czolg;
 ShaderProgram* sp_niebo;
 
 //Uchwyty na tekstury
@@ -164,68 +164,68 @@ void wczytajModele() {
 	lufa = new Lufa();
 	ziemia = new Ziemia();
 	niebo = new Niebo();
-	gasiennicaL = new Gasiennica(vec3(1.45f, 0.1f, 0.0f));// Lewa 
-	gasiennicaP = new Gasiennica(vec3(-1.35f, 0.1f, 0.0f)); //Prawa
+	gasienicaLewa = new Gasienica(vec3(1.45f, 0.0f, -1.7f));// Lewa 
+	gasienicaPrawa = new Gasienica(vec3(-1.35f, 0.0f, -1.7f)); //Prawa
 
 	//Koła skrajne małe
-	koloSLp = new KoloS(vec3(1.45f, 0.1f, 0.0f));
-	koloSLt = new KoloS(vec3(1.45f, 0.1 + 6.201, 0.0f));
-	koloSPp = new KoloS(vec3(-1.35f, 0.1, 0.0f));
-	koloSPt = new KoloS(vec3(-1.35f, 0.1 + 6.201, 0.0f));
+	koloMLP = new KoloMale(vec3(1.45f, -3.298f, -0.90f));
+	koloMLT = new KoloMale(vec3(1.45f, 2.96f, -0.90f));
+	koloMalePrawePrzod = new KoloMale(vec3(-1.35f, 2.96f, -0.90f));
+	koloMalePraweTyl = new KoloMale(vec3(-1.35f, -3.298f, -0.90f));
 
 	//Koła środek duże
-	koloLL1 = new KoloL(vec3(1.45f, -2.1f - 0.15f, 0.0f));
-	koloLL2 = new KoloL(vec3(1.45f, -0.98f - 0.15f, 0.0f));
-	koloLL3 = new KoloL(vec3(1.45f, 0.21f - 0.15f, 0.0f));
-	koloLL4 = new KoloL(vec3(1.45f, 1.21f - 0.15f, 0.0f));
-	koloLL5 = new KoloL(vec3(1.45f, 2.29f - 0.15f, 0.0f));
+	koloDuzeL1 = new KoloDuze(vec3(1.45f, -2.1f - 0.15f, 0.0f));
+	koloDuzeL2 = new KoloDuze(vec3(1.45f, -0.98f - 0.15f, 0.0f));
+	koloDuzeL3 = new KoloDuze(vec3(1.45f, 0.21f - 0.15f, 0.0f));
+	koloDuzeL4 = new KoloDuze(vec3(1.45f, 1.21f - 0.15f, 0.0f));
+	koloDuzeL5 = new KoloDuze(vec3(1.45f, 2.29f - 0.15f, 0.0f));
 
-	koloP1 = new KoloL(vec3(-1.35f, -2.1f - 0.15f, 0.0f));
-	koloP2 = new KoloL(vec3(-1.35f, -0.98f - 0.15f, 0.0f));
-	koloP3 = new KoloL(vec3(-1.35f, 0.21f - 0.15f, 0.0f));
-	koloP4 = new KoloL(vec3(-1.35f, 1.21f - 0.15f, 0.0f));
-	koloP5 = new KoloL(vec3(-1.35f, 2.29f - 0.15f, 0.0f));
+	koloDuzeP1 = new KoloDuze(vec3(-1.35f, -2.1f - 0.15f, 0.0f));
+	koloDuzeP2 = new KoloDuze(vec3(-1.35f, -0.98f - 0.15f, 0.0f));
+	koloDuzeP3 = new KoloDuze(vec3(-1.35f, 0.21f - 0.15f, 0.0f));
+	koloDuzeP4 = new KoloDuze(vec3(-1.35f, 1.21f - 0.15f, 0.0f));
+	koloDuzeP5 = new KoloDuze(vec3(-1.35f, 2.29f - 0.15f, 0.0f));
 
 	modele.push_back(niebo);
 	modele.push_back(kadlub);
 	modele.push_back(wieza);
 	modele.push_back(lufa);
-	modele.push_back(gasiennicaL);
-	modele.push_back(gasiennicaP);
+	modele.push_back(gasienicaLewa);
+	modele.push_back(gasienicaPrawa);
 
-	modele.push_back(koloSLp);
-	modele.push_back(koloSLt);
-	modele.push_back(koloSPp);
-	modele.push_back(koloSPt);
+	modele.push_back(koloMLP);
+	modele.push_back(koloMLT);
+	modele.push_back(koloMalePrawePrzod);
+	modele.push_back(koloMalePraweTyl);
 
-	modele.push_back(koloLL1);
-	modele.push_back(koloLL2);
-	modele.push_back(koloLL3);
-	modele.push_back(koloLL4);
-	modele.push_back(koloLL5);
+	modele.push_back(koloDuzeL1);
+	modele.push_back(koloDuzeL2);
+	modele.push_back(koloDuzeL3);
+	modele.push_back(koloDuzeL4);
+	modele.push_back(koloDuzeL5);
 
-	modele.push_back(koloP1);
-	modele.push_back(koloP2);
-	modele.push_back(koloP3);
-	modele.push_back(koloP4);
-	modele.push_back(koloP5);
+	modele.push_back(koloDuzeP1);
+	modele.push_back(koloDuzeP2);
+	modele.push_back(koloDuzeP3);
+	modele.push_back(koloDuzeP4);
+	modele.push_back(koloDuzeP5);
 
-	kolaMaleL.push_back(koloSLp);
-	kolaMaleL.push_back(koloSLt);
-	kolaMaleP.push_back(koloSPp);
-	kolaMaleP.push_back(koloSPt);
+	kolaMaleL.push_back(koloMLP);
+	kolaMaleL.push_back(koloMLT);
+	kolaMaleP.push_back(koloMalePrawePrzod);
+	kolaMaleP.push_back(koloMalePraweTyl);
 
-	kolaLewe.push_back(koloLL1);
-	kolaLewe.push_back(koloLL2);
-	kolaLewe.push_back(koloLL3);
-	kolaLewe.push_back(koloLL4);
-	kolaLewe.push_back(koloLL5);
+	kolaLewe.push_back(koloDuzeL1);
+	kolaLewe.push_back(koloDuzeL2);
+	kolaLewe.push_back(koloDuzeL3);
+	kolaLewe.push_back(koloDuzeL4);
+	kolaLewe.push_back(koloDuzeL5);
 
-	kolaPrawe.push_back(koloP1);
-	kolaPrawe.push_back(koloP2);
-	kolaPrawe.push_back(koloP3);
-	kolaPrawe.push_back(koloP4);
-	kolaPrawe.push_back(koloP5);
+	kolaPrawe.push_back(koloDuzeP1);
+	kolaPrawe.push_back(koloDuzeP2);
+	kolaPrawe.push_back(koloDuzeP3);
+	kolaPrawe.push_back(koloDuzeP4);
+	kolaPrawe.push_back(koloDuzeP5);
 }
 
 //Funkcja wczytująca teksturę
@@ -266,17 +266,16 @@ void initOpenGLProgram(GLFWwindow* window) {
 	
 	wczytajModele();
 
-	sp = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
+	sp_czolg = new ShaderProgram("vertex.glsl", NULL, "fragment.glsl");
 	sp_niebo = new ShaderProgram("vertex_niebo.glsl", NULL, "fragment_niebo.glsl");
 
-	texZiemia = readTexture(tekstura_ziemia);
-	texKadlub = readTexture(tekstura_kadlub);
-	texWieza = readTexture(tekstura_wieza);
-	texBloczek = readTexture(tekstura_bloczek);
-	texGasiennica = readTexture(tekstura_gasiennica);
-	texKolo = readTexture(tekstura_kolo);
-	texNiebo = readTexture(tekstura_niebo);
-	texPocisk = readTexture(tekstura_pocisk);
+	texZiemia = readTexture(tex_ziemia);
+	texKadlub = readTexture(tex_kadlub_wieza);
+	texWieza = readTexture(tex_kadlub_wieza);
+	texGasiennica = readTexture(tex_gasienica);
+	texKolo = readTexture(tex_kol);
+	texNiebo = readTexture(tex_nieba);
+	texPocisk = readTexture(tex_pocisku);
 }
 
 //Zwolnienie zasobów zajętych przez program
@@ -290,63 +289,64 @@ void freeOpenGLProgram(GLFWwindow* window) {
 	glDeleteTextures(1, &texKolo);
 	glDeleteTextures(1, &texNiebo);
 	glDeleteTextures(1, &texPocisk);
-	delete sp;
+	delete sp_czolg;
 	delete sp_niebo;
 }
 
+float previousTime = glfwGetTime();
 //Procedura rysująca zawartość sceny
 void drawScene(GLFWwindow* window, float angle, float wheelL, float wheelP, float obrotWieza, float depression, float ruchNieba, float s, float t, float r) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	kamera->findPointOnSphere(s, t, r);
-	kamera->przesunDoModelu(kadlub->position[0], kadlub->position[2], kadlub->position[1]);
+	kamera->przesunDoModelu(kadlub->pozycja[0], kadlub->pozycja[2], kadlub->pozycja[1]);
 
 	glm::mat4 V = glm::lookAt(
 		glm::vec3(kamera->x, kamera->y, kamera->z),
-		glm::vec3(kadlub->position[0], -kadlub->position[2], -kadlub->position[1]),
+		glm::vec3(kadlub->pozycja[0], -kadlub->pozycja[2], -kadlub->pozycja[1]),
 		glm::vec3(0.0f, 1.0f, 0.0f));
 
 	glm::mat4 P = glm::perspective(glm::radians(fov), aspectRatio, 0.01f, 50.0f); //Wylicz macierz rzutowania 
 
-	sp->use();//Aktywacja programu cieniującego
+	sp_czolg->use();//Aktywacja programu cieniującego
 	//Przeslij parametry programu cieniującego do karty graficznej
-	glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
-	glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
-	glUniform4f(sp->u("lp[0]"), 8000, 10000, 0, 1); //Współrzędne źródła światła
-	glUniform4f(sp->u("lp[1]"), -800, 5, 0, 1);
-	glUniform4f(sp->u("lp[2]"), 0, 5, 800, 1);
-	glUniform4f(sp->u("lp[3]"), 0, 5, -800, 1);
+	glUniformMatrix4fv(sp_czolg->u("P"), 1, false, glm::value_ptr(P));
+	glUniformMatrix4fv(sp_czolg->u("V"), 1, false, glm::value_ptr(V));
+	glUniform4f(sp_czolg->u("lp[0]"), 8000, 10000, 0, 1); //Współrzędne źródła światła
+	glUniform4f(sp_czolg->u("lp[1]"), -800, 8, 0, 1);
+	glUniform4f(sp_czolg->u("lp[2]"), 0, 8, 800, 1);
+	glUniform4f(sp_czolg->u("lp[3]"), 0, 8, -800, 1);
 
-	glUniform1i(sp->u("textureMap0"), 0);
+	glUniform1i(sp_czolg->u("textureMap0"), 0);
 	glActiveTexture(GL_TEXTURE0);
-	glUniform1i(sp->u("textureMap1"), 1);
+	glUniform1i(sp_czolg->u("textureMap1"), 1);
 	glActiveTexture(GL_TEXTURE1);
 
-	kadlub->drawKadlub(texKadlub, sp);
+	kadlub->drawKadlub(texKadlub, sp_czolg);
 
 	wieza->obrot = obrotWieza;
 	lufa->obrot = obrotWieza;
 	lufa->podniesienie = depression;
-	wieza->drawWieza(texWieza, sp);
-	lufa->drawLufa(texWieza, sp);
-	ziemia->drawZiemia(texZiemia, sp);
+	wieza->drawWieza(texWieza, sp_czolg);
+	lufa->drawLufa(texWieza, sp_czolg);
+	ziemia->drawZiemia(texZiemia, sp_czolg);
 
-	gasiennicaL->drawGasienica(texGasiennica, sp);
-	gasiennicaP->drawGasienica(texGasiennica, sp);
+	gasienicaLewa->drawGasienica(texGasiennica, sp_czolg);
+	gasienicaPrawa->drawGasienica(texGasiennica, sp_czolg);
 
 	for (int i = 0; i < kolaLewe.size(); i++) {
-		kolaLewe[i]->obrot = wheelL;
-		kolaPrawe[i]->obrot = wheelP;
-		kolaLewe[i]->drawKoloL(texKolo, sp);
-		kolaPrawe[i]->drawKoloL(texKolo, sp);
+		kolaLewe[i]->speed = wheelL;
+		kolaPrawe[i]->speed = wheelP;
+		kolaLewe[i]->drawKoloDuze(texKolo, sp_czolg);
+		kolaPrawe[i]->drawKoloDuze(texKolo, sp_czolg);
 	}
 
 	for (int i = 0; i < 2; i++) {
-		kolaMaleL[i]->obrot = wheelL;
-		kolaMaleP[i]->obrot = wheelP;
-		kolaMaleL[i]->drawKoloS(texKolo, sp);
-		kolaMaleP[i]->drawKoloS(texKolo, sp);
+		kolaMaleL[i]->speed = wheelL;
+		kolaMaleP[i]->speed = wheelP;
+		kolaMaleL[i]->drawKoloMale(texKolo, sp_czolg);
+		kolaMaleP[i]->drawKoloMale(texKolo, sp_czolg);
 	}
 
 
@@ -369,14 +369,18 @@ void drawScene(GLFWwindow* window, float angle, float wheelL, float wheelP, floa
 	niebo->angleX = ruchNieba;
 	niebo->drawNiebo(texNiebo, sp_niebo);
 
+	float currentTime = glfwGetTime();
+	float deltaTime = currentTime - previousTime;
+	previousTime = currentTime;
+	if (deltaTime < 0) deltaTime *= -1;
 	// Renderuj istniejące pociski
 	if (aktywnePociski.size() > 0)
 	{
 		for (auto& pocisk : aktywnePociski)
 		{
-			pocisk->Update(depression);
+			pocisk->Update(depression, deltaTime);
 			if (pocisk->life < 0) aktywnePociski.erase(aktywnePociski.begin());
-			else pocisk->drawPocisk(texPocisk, sp);
+			else pocisk->drawPocisk(texPocisk, sp_czolg);
 		}
 	}
 	
@@ -386,7 +390,8 @@ void drawScene(GLFWwindow* window, float angle, float wheelL, float wheelP, floa
 void obsluzKlikniecie(float angle) {
 	// strzelanie
 	if (space_pressed) {
-		pocisk = new Pocisk(lufa->position, (kadlub->angleZ * PI / 180) + 2 * PI + lufa->obrot);
+		pocisk = new Pocisk(lufa->pozycja, (kadlub->angleZ * PI / 180) + lufa->obrot);
+		pocisk->initializeSystem(pocisk->psystem);
 		aktywnePociski.push_back(pocisk);
 		space_pressed = false;
 	}
@@ -412,14 +417,14 @@ void obsluzKlikniecie(float angle) {
 
 	//podnies/obniz lufe
 	if (f_pressed) {
-		if (lufa->podniesienie < 2 * PI / 60) podniesienie = 2 * PI * 1 / 80;
-		else podniesienie = 0;
+		if (lufa->podniesienie < 2 * PI / 60) podniesienieLufy = 2 * PI * 1 / 80;
+		else podniesienieLufy = 0;
 	}
 	else if (r_pressed) {
-		if (lufa->podniesienie > -2 * PI / 60) podniesienie = -2 * PI * 1 / 80;
-		else podniesienie = 0;
+		if (lufa->podniesienie > -2 * PI / 60) podniesienieLufy = -2 * PI * 1 / 80;
+		else podniesienieLufy = 0;
 	}
-	else podniesienie = 0;
+	else podniesienieLufy = 0;
 	
 
 	//obrot czolgu
@@ -432,29 +437,29 @@ void obsluzKlikniecie(float angle) {
 	else skret = 0;
 
 	//ustal przesuniecie czolgu na osiach x i y
-	float ruchx;
-	float ruchy;
+	float osx;
+	float osy;
 
 	if (angle >= 0 && angle < 90) {
-		ruchx = (1 - (angle / 90)) * predkoscJazdy / 100;
-		ruchy = (angle / 90) * predkoscJazdy / 100;
+		osx = (1 - (angle / 90)) * predkoscJazdy / 100;
+		osy = (angle / 90) * predkoscJazdy / 100;
 	}
 	else if (angle >= 90 && angle < 180) {
-		ruchx = -1 * ((angle - 90) / 90) * predkoscJazdy / 100;
-		ruchy = (1 - ((angle - 90) / 90)) * predkoscJazdy / 100;
+		osx = -1 * ((angle - 90) / 90) * predkoscJazdy / 100;
+		osy = (1 - ((angle - 90) / 90)) * predkoscJazdy / 100;
 	}
 	else if (angle >= 180 && angle < 270) {
-		ruchx = -1 * (1 - ((angle - 180) / 90)) * predkoscJazdy / 100;
-		ruchy = -1 * ((angle - 180) / 90) * predkoscJazdy / 100;
+		osx = -1 * (1 - ((angle - 180) / 90)) * predkoscJazdy / 100;
+		osy = -1 * ((angle - 180) / 90) * predkoscJazdy / 100;
 	}
 	else {
-		ruchx = (angle - 270) / 90 * predkoscJazdy / 100;
-		ruchy = -1 * (1 - ((angle - 270) / 90)) * predkoscJazdy / 100;
+		osx = (angle - 270) / 90 * predkoscJazdy / 100;
+		osy = -1 * (1 - ((angle - 270) / 90)) * predkoscJazdy / 100;
 	}
 
 	for (int i = 0; i < modele.size(); i++) {
-		modele[i]->position[1] -= ruchx;
-		modele[i]->position[0] -= ruchy;
+		modele[i]->pozycja[1] -= osx;
+		modele[i]->pozycja[0] -= osy;
 		modele[i]->angleZ = -angle;
 	}
 
@@ -510,32 +515,32 @@ int main(void)
 	initOpenGLProgram(window); //Operacje inicjujące
 
 	//Główna pętla
-	float wheelP = 0, wieza = 0, wheelL = 0, angle = 0;
+	float kolaPrawe = 0, wieza = 0, kolaLewe = 0, kat = 0;
 	float depression = 0, ruchNieba = 0;
 	float s = 2 * PI / 4, t = -2 * PI / 5, r = 10.0f;
 	glfwSetTime(0); //Zeruj timer
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
-		obsluzKlikniecie(angle);
-		angle += skret * glfwGetTime();
-		if (angle < 0) angle += 360;
-		if (angle > 360) angle -= 360;
+		obsluzKlikniecie(kat);
+		kat += skret * glfwGetTime();
+		if (kat < 0) kat += 360;
+		if (kat > 360) kat -= 360;
 
 		if (predkoscJazdy != 0) {
-			wheelL += predkoscJazdy * glfwGetTime();
-			wheelP += predkoscJazdy * glfwGetTime();
+			kolaLewe += predkoscJazdy * glfwGetTime();
+			kolaPrawe += predkoscJazdy * glfwGetTime();
 		}
 		else if (tank_left) {
-			wheelL += -2 * PI * 1 / 10 * glfwGetTime();
-			wheelP += 2 * PI * 1 / 10 * glfwGetTime();
+			kolaLewe += -2 * PI * 1 / 10 * glfwGetTime();
+			kolaPrawe += 2 * PI * 1 / 10 * glfwGetTime();
 		}
 		else if (tank_right) {
-			wheelL += 2 * PI * 1 / 10 * glfwGetTime();
-			wheelP += -2 * PI * 1 / 10 * glfwGetTime();
+			kolaLewe += 2 * PI * 1 / 10 * glfwGetTime();
+			kolaPrawe += -2 * PI * 1 / 10 * glfwGetTime();
 		}
 
 		wieza += obrotWiezy * glfwGetTime();
-		depression += podniesienie * glfwGetTime();
+		depression += podniesienieLufy * glfwGetTime();
 
 		//kat obrotu sfery nieba
 		ruchNieba += 2 * PI * 1 / 500 * glfwGetTime();
@@ -547,7 +552,7 @@ int main(void)
 		r += radius * glfwGetTime();
 
 		glfwSetTime(0); //Zeruj timer
-		drawScene(window, angle, wheelL, wheelP, wieza, depression, ruchNieba, s, t, r); //Wykonaj procedurę rysującą
+		drawScene(window, kat, kolaLewe, kolaPrawe, wieza, depression, ruchNieba, s, t, r); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 

@@ -5,7 +5,7 @@
 #include "loadOBJ.h"
 #include "shaderprogram.h"
 
-#define model "modele/wizalol.obj"
+#define model "modele/wieza.obj"
 
 using namespace glm;
 
@@ -15,8 +15,8 @@ Wieza::Wieza() {
         fprintf(stderr,"Blad - nie wczytano modelu - wieza");
         exit(1);
     } else fprintf(stderr,"Wieza - wczytano\n");
-    position = vec3(0.0f,-0.05f,-0.55f);
-    przesunDoZera = vec3(-0.00106f,-0.98469f+0.05f,0.67054f+0.42f);
+    pozycja = vec3(0.0f,-0.05f,-0.55f);
+    przesunDoZera = vec3(-0.1f,-0.98f+0.05f,0.67f+0.55f);
     obrot = 0.0f;
     angleZ = 0.0f;
 }
@@ -34,7 +34,7 @@ void Wieza::drawWieza(GLuint &tex, ShaderProgram *sp) {
 
     mat4 M=glm::mat4(1.0f);
 	M=rotate(M,-90 * PI / 180,vec3(1.0f,0.0f,0.0f));
-	M=translate(M,position);
+	M=translate(M,pozycja);
 
 	M=rotate(M,this-> angleZ * PI / 180,vec3(0.0f, 0.0f, 1.0f));
 

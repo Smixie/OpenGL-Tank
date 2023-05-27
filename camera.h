@@ -15,8 +15,6 @@ public:
     float r;
     void findPointOnSphere(float s, float t, float radius);
     void przesunDoModelu(float s, float t, float r);
-protected:
-private:
 };
 
 #endif // CAMERA_H

@@ -5,7 +5,7 @@
 #include "loadOBJ.h"
 #include "shaderprogram.h"
 
-#define model "modele/lufa.obj"
+#define model "modele/lufav2.obj"
 
 using namespace glm;
 
@@ -16,7 +16,7 @@ Lufa::Lufa() {
 		exit(1);
 	}
 	else fprintf(stderr, "Lufa - wczytano\n");
-	position = vec3(0.0f, -0.05f, -0.42f);
+	pozycja = vec3(0.0f, -0.05f, -0.42f);
 	przesunDoZera = vec3(-0.00106f, -0.98469f + 0.05f, 0.67054f + 0.42f);
 	obrot = 0.0f;
 	podniesienie = 0.0f;
@@ -36,7 +36,7 @@ void Lufa::drawLufa(GLuint& tex, ShaderProgram* sp) {
 
 	mat4 M = mat4(1.0f);
 	M = rotate(M, -90 * PI / 180, vec3(1.0f, 0.0f, 0.0f));
-	M = translate(M, position);
+	M = translate(M, pozycja);
 
 	M = rotate(M, this->angleZ * PI / 180, vec3(0.0f, 0.0f, 1.0f));
 

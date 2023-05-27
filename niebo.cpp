@@ -15,7 +15,7 @@ Niebo::Niebo() {
         fprintf(stderr,"Blad - nie wczytano modelu - niebo");
         exit(1);
     } else fprintf(stderr,"Niebo - wczytano\n");
-    position = vec3(0.0f,0.0f,0.0f);
+    pozycja = vec3(0.0f,0.0f,0.0f);
     scale = vec3(40.0f,40.0f,40.0f);
     angleX = 0.0f;
 }
@@ -33,7 +33,7 @@ void Niebo::drawNiebo(GLuint &tex, ShaderProgram *sp) {
 	unsigned int vertexCount= this->vertexCount;
 
     glm::mat4 M=glm::mat4(1.0f);
-	M=glm::translate(M,vec3(position[0], position[2], -position[1]));
+	M=glm::translate(M,vec3(pozycja[0], pozycja[2], -pozycja[1]));
 	M=glm::scale(M,scale);
 	M=rotate(M,90 * PI / 180,vec3(1.0,0.0,0.0));
 	M=rotate(M,angleX,vec3(0.0,0.0,1.0)); // Kierunek obrotu chmur

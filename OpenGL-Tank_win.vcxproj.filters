@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="allmodels.h">
+    <ClInclude Include="modele.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="constants.h">
@@ -30,7 +30,7 @@
     <ClInclude Include="shaderprogram.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="alltextures.h">
+    <ClInclude Include="tekstury.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="OBJload.h">
@@ -42,13 +42,13 @@
     <ClInclude Include="camera.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="gasiennica.h">
+    <ClInclude Include="gasienica.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="koloL.h">
+    <ClInclude Include="koloDuze.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="koloS.h">
+    <ClInclude Include="koloMale.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="lufa.h">
@@ -89,13 +89,13 @@
     <ClCompile Include="camera.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="gasiennica.cpp">
+    <ClCompile Include="gasienica.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="koloL.cpp">
+    <ClCompile Include="koloDuze.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="koloS.cpp">
+    <ClCompile Include="koloMale.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="lufa.cpp">

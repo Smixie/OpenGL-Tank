@@ -20,7 +20,7 @@ public:
     std::vector< float > uvs;
     std::vector< float > normals;
     virtual ~Model() {};
-    vec3 position;
+    vec3 pozycja;
     vec3 przesunDoZera;
     vec3 rotation;
     vec3 scale;
@@ -28,6 +28,7 @@ public:
     float angleY;
     float angleZ;
     float obrot;
+    float speed;
     void drawSolid(GLuint& tex, ShaderProgram* sp, float* verts, float* normals, float* texCoords, unsigned int vertexCount,mat4 M);
 };
 

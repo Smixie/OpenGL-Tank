@@ -2,6 +2,7 @@
 #include <math.h>
 #include "constants.h"
 
+
 Camera::Camera()
 {
     x = 0.0f;

@@ -5,7 +5,7 @@
 #include "loadOBJ.h"
 #include "shaderprogram.h"
 
-#define model "modele/kadlubxd.obj"
+#define model "modele/kadlub.obj"
 
 using namespace glm;
 
@@ -16,7 +16,7 @@ Kadlub::Kadlub() {
 		exit(1);
 	}
 	else fprintf(stderr, "Kadlub - wczytano\n");
-	position = vec3(0.0f, 0.0f, -0.1f);
+	pozycja = vec3(0.0f, 0.0f, -0.1f);
 	angleZ = 0.0f;
 }
 
@@ -34,7 +34,7 @@ void Kadlub::drawKadlub(GLuint& tex, ShaderProgram* sp) {
 
 	mat4 M = mat4(1.0f);
 	M = rotate(M, -90 * PI / 180, vec3(1.0f, 0.0f, 0.0f));
-	M = translate(M, position);
+	M = translate(M, pozycja);
 
 	M = rotate(M, this->angleZ * PI / 180, vec3(0.0f, 0.0f, 1.0f));
 
