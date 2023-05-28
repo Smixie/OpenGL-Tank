@@ -48,16 +48,7 @@ KoloMale* koloMalePrawePrzod;
 KoloMale* koloMalePraweTyl;
 
 KoloDuze* koloDuzeL1;
-KoloDuze* koloDuzeL2;
-KoloDuze* koloDuzeL3;
-KoloDuze* koloDuzeL4;
-KoloDuze* koloDuzeL5;
-
 KoloDuze* koloDuzeP1;
-KoloDuze* koloDuzeP2;
-KoloDuze* koloDuzeP3;
-KoloDuze* koloDuzeP4;
-KoloDuze* koloDuzeP5;
 
 Pocisk* pocisk;
 
@@ -168,23 +159,22 @@ void wczytajModele() {
 	gasienicaPrawa = new Gasienica(vec3(-1.35f, 0.0f, -1.7f)); //Prawa
 
 	//Koła skrajne małe
-	koloMLP = new KoloMale(vec3(1.45f, -3.298f, -0.90f));
-	koloMLT = new KoloMale(vec3(1.45f, 2.96f, -0.90f));
+	koloMLP = new KoloMale(vec3(1.40f, -3.298f, -0.90f));
+	koloMLT = new KoloMale(vec3(1.40f, 2.96f, -0.90f));
 	koloMalePrawePrzod = new KoloMale(vec3(-1.35f, 2.96f, -0.90f));
 	koloMalePraweTyl = new KoloMale(vec3(-1.35f, -3.298f, -0.90f));
 
 	//Koła środek duże
-	koloDuzeL1 = new KoloDuze(vec3(1.45f, -2.1f - 0.15f, 0.0f));
-	koloDuzeL2 = new KoloDuze(vec3(1.45f, -0.98f - 0.15f, 0.0f));
-	koloDuzeL3 = new KoloDuze(vec3(1.45f, 0.21f - 0.15f, 0.0f));
-	koloDuzeL4 = new KoloDuze(vec3(1.45f, 1.21f - 0.15f, 0.0f));
-	koloDuzeL5 = new KoloDuze(vec3(1.45f, 2.29f - 0.15f, 0.0f));
-
-	koloDuzeP1 = new KoloDuze(vec3(-1.35f, -2.1f - 0.15f, 0.0f));
-	koloDuzeP2 = new KoloDuze(vec3(-1.35f, -0.98f - 0.15f, 0.0f));
-	koloDuzeP3 = new KoloDuze(vec3(-1.35f, 0.21f - 0.15f, 0.0f));
-	koloDuzeP4 = new KoloDuze(vec3(-1.35f, 1.21f - 0.15f, 0.0f));
-	koloDuzeP5 = new KoloDuze(vec3(-1.35f, 2.29f - 0.15f, 0.0f));
+	float odleglosc = -2.35f;
+	for (int i = 0; i < 5; i++) {
+		koloDuzeL1 = new KoloDuze(vec3(1.45f, odleglosc, 0.0f));
+		koloDuzeP1 = new KoloDuze(vec3(-1.35f, odleglosc, 0.0f));
+		kolaLewe.push_back(koloDuzeL1);
+		modele.push_back(koloDuzeL1);
+		modele.push_back(koloDuzeP1);
+		kolaPrawe.push_back(koloDuzeP1);
+		odleglosc += 1.1f;
+	}
 
 	modele.push_back(niebo);
 	modele.push_back(kadlub);
@@ -198,34 +188,10 @@ void wczytajModele() {
 	modele.push_back(koloMalePrawePrzod);
 	modele.push_back(koloMalePraweTyl);
 
-	modele.push_back(koloDuzeL1);
-	modele.push_back(koloDuzeL2);
-	modele.push_back(koloDuzeL3);
-	modele.push_back(koloDuzeL4);
-	modele.push_back(koloDuzeL5);
-
-	modele.push_back(koloDuzeP1);
-	modele.push_back(koloDuzeP2);
-	modele.push_back(koloDuzeP3);
-	modele.push_back(koloDuzeP4);
-	modele.push_back(koloDuzeP5);
-
 	kolaMaleL.push_back(koloMLP);
 	kolaMaleL.push_back(koloMLT);
 	kolaMaleP.push_back(koloMalePrawePrzod);
 	kolaMaleP.push_back(koloMalePraweTyl);
-
-	kolaLewe.push_back(koloDuzeL1);
-	kolaLewe.push_back(koloDuzeL2);
-	kolaLewe.push_back(koloDuzeL3);
-	kolaLewe.push_back(koloDuzeL4);
-	kolaLewe.push_back(koloDuzeL5);
-
-	kolaPrawe.push_back(koloDuzeP1);
-	kolaPrawe.push_back(koloDuzeP2);
-	kolaPrawe.push_back(koloDuzeP3);
-	kolaPrawe.push_back(koloDuzeP4);
-	kolaPrawe.push_back(koloDuzeP5);
 }
 
 //Funkcja wczytująca teksturę
@@ -313,7 +279,7 @@ void drawScene(GLFWwindow* window, float angle, float wheelL, float wheelP, floa
 	//Przeslij parametry programu cieniującego do karty graficznej
 	glUniformMatrix4fv(sp_czolg->u("P"), 1, false, glm::value_ptr(P));
 	glUniformMatrix4fv(sp_czolg->u("V"), 1, false, glm::value_ptr(V));
-	glUniform4f(sp_czolg->u("lp[0]"), 8000, 10000, 0, 1); //Współrzędne źródła światła
+	glUniform4f(sp_czolg->u("lp[0]"), 800, 1000, 0, 1); //Współrzędne źródła światła
 	glUniform4f(sp_czolg->u("lp[1]"), -800, 8, 0, 1);
 	glUniform4f(sp_czolg->u("lp[2]"), 0, 8, 800, 1);
 	glUniform4f(sp_czolg->u("lp[3]"), 0, 8, -800, 1);
